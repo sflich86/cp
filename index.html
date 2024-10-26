@@ -32,19 +32,26 @@
 
     <!-- Script para ocultar el botón de mostrar/ocultar del widget -->
     <script type="text/javascript">
-        // Función para ocultar el botón de mostrar/ocultar
+        // Función para intentar ocultar el botón de mostrar/ocultar
         function ocultarBotonWidget() {
             const rootElement = document.querySelector("#root > div");
             if (rootElement && rootElement.shadowRoot) {
                 const toggleButton = rootElement.shadowRoot.querySelector("div > button");
                 if (toggleButton) {
                     toggleButton.style.display = "none"; // Oculta el botón
+                    observer.disconnect(); // Deja de observar una vez encontrado y ocultado
                 }
             }
         }
 
-        // Espera 1 segundo y luego intenta ocultar el botón
-        setTimeout(ocultarBotonWidget, 1000); // Ajusta el tiempo si el botón tarda más en cargarse
+        // Observador de cambios en el DOM
+        const observer = new MutationObserver(ocultarBotonWidget);
+
+        // Configura el observador para monitorear el contenedor del widget
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     </script>
 </body>
 </html>
