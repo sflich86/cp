@@ -8,6 +8,7 @@
 <body>
     <div id="root"></div>
 
+    <!-- Script para cargar el widget -->
     <script type="text/javascript">
         (function(d, t) {
             var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
@@ -22,27 +23,28 @@
                         id: '0eb58f2f-4fc5-4e06-9945-0f6b2ecefb4c',
                     });
                 }
-
-                // Espera para que el widget cargue completamente
-                setTimeout(function() {
-                    // Selecciona el botón y lo oculta
-                    var button = document.querySelector("#root > div").shadowRoot.querySelector("div > button");
-                    if (button) {
-                        button.style.display = "none";
-                    }
-
-                    // Elimina el margen superior del contenedor principal del widget
-                    var widgetContainer = document.querySelector("#root > div").shadowRoot.querySelector("div");
-                    if (widgetContainer) {
-                        widgetContainer.style.marginTop = "0";
-                        widgetContainer.style.paddingTop = "0";
-                    }
-                }, 1000); // Ajusta el tiempo de espera si es necesario
             };
             v.src = "https://agentivehub.com/production.bundle.min.js";
             v.type = "text/javascript";
             s.parentNode.insertBefore(v, s);
         })(document, 'script');
+    </script>
+
+    <!-- Script para ocultar el botón de mostrar/ocultar del widget -->
+    <script type="text/javascript">
+        // Función para ocultar el botón de mostrar/ocultar
+        function ocultarBotonWidget() {
+            const rootElement = document.querySelector("#root > div");
+            if (rootElement && rootElement.shadowRoot) {
+                const toggleButton = rootElement.shadowRoot.querySelector("div > button");
+                if (toggleButton) {
+                    toggleButton.style.display = "none"; // Oculta el botón
+                }
+            }
+        }
+
+        // Espera 1 segundo y luego intenta ocultar el botón
+        setTimeout(ocultarBotonWidget, 1000); // Ajusta el tiempo si el botón tarda más en cargarse
     </script>
 </body>
 </html>
