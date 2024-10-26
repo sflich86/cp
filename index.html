@@ -1,22 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget de Chat</title>
+</head>
+<body>
+    <!-- El widget se mostrará dentro del div con id "root" -->
+    <div id="root"></div>
 
-<script type="text/javascript">
-  (function(d, t) {
-    var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
-    v.onload = function() {
-      if (!document.getElementById('root')) {
-        var root = d.createElement('div');
-        root.id = 'root';
-        d.body.appendChild(root);
-      }
-      if (window.myChatWidget && typeof window.myChatWidget.load === 'function') {
-        window.myChatWidget.load({
-          id: '0eb58f2f-4fc5-4e06-9945-0f6b2ecefb4c',
-        });
-      }
-    };
-    v.src = "https://agentivehub.com/production.bundle.min.js";
-    v.type = "text/javascript";
-    s.parentNode.insertBefore(v, s);
-  })(document, 'script');
-</script>
-    
+    <script type="text/javascript">
+      (function(d, t) {
+        var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+        v.onload = function() {
+          if (!document.getElementById('root')) {
+            var root = d.createElement('div');
+            root.id = 'root';
+            d.body.appendChild(root);
+          }
+          if (window.myChatWidget && typeof window.myChatWidget.load === 'function') {
+            window.myChatWidget.load({
+              id: '0eb58f2f-4fc5-4e06-9945-0f6b2ecefb4c',
+            });
+          }
+        };
+        v.src = "https://agentivehub.com/production.bundle.min.js";
+        v.type = "text/javascript";
+        s.parentNode.insertBefore(v, s);
+      })(document, 'script');
+    </script>
+</body>
+</html>
