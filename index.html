@@ -3,6 +3,7 @@
 <head>
     <title>Asistente Virtual - CP Cirugía Estética</title>
     <style>
+        /* Previous styles remain the same */
         * {
             margin: 0;
             padding: 0;
@@ -129,11 +130,11 @@
             <small>CP Cirugía Estética</small>
         </div>
         <div id="chat-messages">
-            <!-- Mensajes aparecerán aquí -->
+            <!-- Messages will appear here -->
         </div>
         <div id="chat-input-container">
             <input type="text" id="chat-input" placeholder="Escribe tu mensaje aquí...">
-            <button id="send-button" onclick="sendMessage()">Enviar</button>
+            <button id="send-button">Enviar</button>
         </div>
     </div>
 
@@ -141,6 +142,7 @@
         let sessionId = null;
         const API_KEY = '8e407fc7-e141-4a6e-8e84-ee4486737053';
         const ASSISTANT_ID = '00a9a5c3-6bce-4e85-9d7a-a3d3995498c0';
+        const API_BASE_URL = 'https://agentivehub.com/api';
 
         function showTypingIndicator() {
             const indicatorDiv = document.createElement('div');
@@ -160,31 +162,41 @@
             }
         }
 
-        async function initSession() {
+        async function makeApiRequest(endpoint, data) {
             try {
-                const response = await fetch('https://agentivehub.com/api/chat/session', {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
-                    body: JSON.stringify({
-                        api_key: API_KEY,
-                        assistant_id: ASSISTANT_ID
-                    })
+                    body: JSON.stringify(data)
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+
+                return await response.json();
+            } catch (error) {
+                console.error(`API Request Error (${endpoint}):`, error);
+                throw error;
+            }
+        }
+
+        async function initSession() {
+            try {
+                const data = await makeApiRequest('/chat/session', {
+                    api_key: API_KEY,
+                    assistant_id: ASSISTANT_ID
+                });
                 
-                const data = await response.json();
                 console.log('Session initialized:', data);
                 sessionId = data.session_id;
                 
                 addMessage("¡Hola! Soy el asistente virtual de CP Cirugía Estética. ¿En qué puedo ayudarte hoy?", false);
             } catch (error) {
-                console.error('Error al iniciar sesión:', error);
+                console.error('Session initialization error:', error);
                 addMessage("Error al conectar con el servicio. Por favor, recarga la página.", false);
             }
         }
@@ -212,42 +224,32 @@
             button.disabled = true;
 
             try {
-                const response = await fetch('https://agentivehub.com/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        api_key: API_KEY,
-                        session_id: sessionId,
-                        type: 'text',
-                        assistant_id: ASSISTANT_ID,
-                        messages: [{
-                            role: 'user',
-                            content: message
-                        }]
-                    })
+                const data = await makeApiRequest('/chat', {
+                    api_key: API_KEY,
+                    session_id: sessionId,
+                    type: 'text',
+                    assistant_id: ASSISTANT_ID,
+                    messages: [{
+                        role: 'user',
+                        content: message
+                    }]
                 });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log('Response received:', data);
                 
                 removeTypingIndicator(typingIndicator);
                 
-                if (data.response) {
-                    addMessage(data.response, false);
-                } else if (data.messages && data.messages.length > 0) {
-                    addMessage(data.messages[0].content, false);
+                // Handle different response formats
+                const responseText = data.response || 
+                                   (data.messages && data.messages[0] && data.messages[0].content) ||
+                                   (data.content) ||
+                                   null;
+                
+                if (responseText) {
+                    addMessage(responseText, false);
                 } else {
-                    throw new Error('Respuesta vacía del servidor');
+                    throw new Error('No valid response content found');
                 }
             } catch (error) {
-                console.error('Error al enviar mensaje:', error);
+                console.error('Message sending error:', error);
                 removeTypingIndicator(typingIndicator);
                 addMessage("Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta de nuevo.", false);
             } finally {
@@ -255,6 +257,7 @@
             }
         }
 
+        // Event Listeners
         document.getElementById('chat-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -262,7 +265,9 @@
             }
         });
 
-        // Iniciar sesión al cargar la página
+        document.getElementById('send-button').addEventListener('click', sendMessage);
+
+        // Initialize session on page load
         initSession();
     </script>
 </body>
