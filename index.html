@@ -125,6 +125,9 @@ body {
     font-size: 14px;
     background-color: white;
 }
+        #chat-input:focus {
+    outline: 2px solid #128c7e; /* Cambia el color si prefieres otro */
+}
 
 #send-button {
     padding: 10px;
@@ -330,6 +333,7 @@ html {
     color: #666;
     margin-top: 10px;
 }
+        
 
     </style>
     <!-- Meta Pixel Code -->
@@ -596,6 +600,13 @@ document.getElementById('chat-input').addEventListener('keypress', function(e) {
     }
 });
 document.getElementById('send-button').addEventListener('click', sendMessage);
+
+        document.addEventListener("DOMContentLoaded", function() {
+    const chatInput = document.getElementById("chat-input");
+    if (chatInput) {
+        chatInput.focus(); // Enfoca automáticamente el campo de texto
+    }
+});
     </script>
 </body>
 </html>
