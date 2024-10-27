@@ -47,25 +47,34 @@
         <div id="chat-input-container"><input type="text" id="chat-input" placeholder="Escribí acá..."><button id="send-button">Enviar</button></div>
     </div>
     <script>
-        let sessionId = null;
+    let sessionId = null;
         const API_KEY = '8e407fc7-e141-4a6e-8e84-ee4486737053'; //<- Your API Key
         const ASSISTANT_ID = '00a9a5c3-6bce-4e85-9d7a-a3d3995498c0'; //<- Your Assistant ID
-        const API_BASE_URL = 'https://agentivehub.com/api';
+const API_BASE_URL = 'https://agentivehub.com/api';
 
-        async function makeApiRequest(endpoint, data) {
-            try {
-                const response = await fetch(`${API_BASE_URL}${endpoint}`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data) });
-                if (!response.ok) { throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`); }
-                return await response.json();
-            } catch (error) { console.error(`API Request Error (${endpoint}):`, error); addMessage(`Error: ${error.message}`, false); throw error; }
+async function makeApiRequest(endpoint, data) {
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`);
         }
-        async function initSession() {
-            try {
-                const data = await makeApiRequest('/chat/session', { api_key: API_KEY, assistant_id: ASSISTANT_ID });
-                sessionId = data.session_id; addMessage("¡Hola! Soy Eleonora de CP Cirugia Estética. ¿En qué puedo ayudarte?", false);
-            } catch (error) { console.error('Session Init Error:', error); addMessage("Error al iniciar la sesión. Por favor, intenta de nuevo.", false);}
-        }
-   function addMessage(text, isUser) {
+        return await response.json();
+    } catch (error) {
+        console.error(`API Request Error (${endpoint}):`, error);
+        addMessage(`Error: ${error.message}`, false);
+        throw error;
+    }
+}
+
+
+function addMessage(text, isUser) {
     const messagesDiv = document.getElementById('chat-messages');
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
@@ -74,20 +83,19 @@
         // Regex para encontrar URLs
         const urlRegex = /(https?:\/\/[^\s]+)/g;
 
-        // Reemplazar URLs con hipervínculos
+        // Reemplazar URLs con hipervínculos y formatear negritas
+        const boldRegex = /\*\*(.*?)\*\*/g;
         const formattedText = text.split('\n').map(part => {
             if (part.startsWith('-')) {
-                 return `<li>${part.substring(2).trim().replace(urlRegex, '<a href="$1" target="_blank">$1</a>')}</li>`;
+                return `<li>${part.substring(2).trim().replace(urlRegex, '<a href="$1" target="_blank">$1</a>').replace(boldRegex, '<strong>$1</strong>')}</li>`;
             } else if (part.trim() !== "") {
-                 return `<p>${part.trim().replace(urlRegex, '<a href="$1" target="_blank">$1</a>')}</p>`;
+                return `<p>${part.trim().replace(urlRegex, '<a href="$1" target="_blank">$1</a>').replace(boldRegex, '<strong>$1</strong>')}</p>`;
             } else {
-               return '';
+                return '';
             }
-
         }).join('');
 
         messageDiv.innerHTML = formattedText;
-
 
 
     } else {
@@ -97,26 +105,75 @@
     messagesDiv.appendChild(messageDiv);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
-        function showTypingIndicator() {
-            const indicatorDiv = document.createElement('div'); indicatorDiv.className = 'typing-indicator';
-            indicatorDiv.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
-            document.getElementById('chat-messages').appendChild(indicatorDiv); return indicatorDiv;
+
+
+function showTypingIndicator() {
+    const indicatorDiv = document.createElement('div');
+    indicatorDiv.className = 'typing-indicator';
+    indicatorDiv.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+    document.getElementById('chat-messages').appendChild(indicatorDiv);
+    return indicatorDiv;
+}
+
+function removeTypingIndicator(indicator) {
+    if (indicator && indicator.parentElement) {
+        indicator.parentElement.removeChild(indicator);
+    }
+}
+
+async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    input.value = '';
+    addMessage(message, true);
+
+    const typingIndicator = showTypingIndicator();
+    const button = document.getElementById('send-button');
+    button.disabled = true;
+
+    try {
+        if (!sessionId) {
+            const data = await makeApiRequest('/chat/session', { api_key: API_KEY, assistant_id: ASSISTANT_ID });
+            sessionId = data.session_id;
+            addMessage("¡Hola! Soy Eleonora de CP Cirugia Estética. ¿En qué puedo ayudarte?", false);
         }
-        function removeTypingIndicator(indicator) { if (indicator && indicator.parentElement) { indicator.parentElement.removeChild(indicator); }}
-        async function sendMessage() {
-            const input = document.getElementById('chat-input'); const message = input.value.trim(); if (!message || !sessionId) return;
-            input.value = ''; addMessage(message, true); const typingIndicator = showTypingIndicator();
-            const button = document.getElementById('send-button'); button.disabled = true;
-            try {
-                const data = await makeApiRequest('/chat', { api_key: API_KEY, session_id: sessionId, type: 'text', assistant_id: ASSISTANT_ID, messages: [{ role: 'user', content: message }]});
-                removeTypingIndicator(typingIndicator);
-                const responseText = data.response || (data.messages && data.messages[0] && data.messages[0].content) || (data.content) || null;
-                if (responseText) { addMessage(responseText, false); } else { console.error("Invalid response format:", data); addMessage("Error: Formato de respuesta inválido.", false);}
-            } catch (error) { console.error('Send Message Error:', error); removeTypingIndicator(typingIndicator); addMessage("Error al enviar el mensaje. Por favor, intenta de nuevo.", false);
-            } finally { button.disabled = false;}
+
+
+        const data = await makeApiRequest('/chat', {
+            api_key: API_KEY,
+            session_id: sessionId,
+            type: 'text',
+            assistant_id: ASSISTANT_ID,
+            messages: [{ role: 'user', content: message }]
+        });
+
+        removeTypingIndicator(typingIndicator);
+        const responseText = data.response || (data.messages && data.messages[0] && data.messages[0].content) || (data.content) || null;
+        if (responseText) {
+            addMessage(responseText, false);
+        } else {
+            console.error("Invalid response format:", data);
+            addMessage("Error: Formato de respuesta inválido.", false);
         }
-        document.getElementById('chat-input').addEventListener('keypress', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }});
-        document.getElementById('send-button').addEventListener('click', sendMessage); initSession();
+
+    } catch (error) {
+        console.error('Send Message Error:', error);
+        removeTypingIndicator(typingIndicator);
+        addMessage("Error al enviar el mensaje. Por favor, intenta de nuevo.", false);
+    } finally {
+        button.disabled = false;
+    }
+}
+
+document.getElementById('chat-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+document.getElementById('send-button').addEventListener('click', sendMessage);
     </script>
 </body>
 </html>
