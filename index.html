@@ -36,63 +36,184 @@
         .dot:nth-child(3) { animation-delay: 0.3s; }
         @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); }}
 
-        .price-list {
-             width: 100%; 
-    max-width: 400px; 
-    margin-top: 20px; 
-   background-color: #f8f9fa;
-  border-radius: 10px;
+.price-list {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
   padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  font-family: sans-serif; /* Fuente moderna */
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.intro {
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: #666; /* Color de texto más suave */
+.price-list h2 {
+  color: #2196f3;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
 }
 
-.price-item {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 15px;
-  margin-bottom: 15px;
+.payment-banner {
+  margin-bottom: 40px;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
 }
 
-.price-item h3 {
+.payment-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  text-align: center;
+}
+
+.payment-icon {
+  font-size: 2rem;
+}
+
+.payment-text h3 {
   color: #2196f3;
   margin-bottom: 5px;
-  font-size: 18px; /* Tamaño de título más grande */
+  font-size: 1.2rem;
+}
+
+.payment-text p {
+  color: #666;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.exchange-note {
+  display: block;
+  margin-top: 10px;
+  color: #666;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.price-card {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 12px;
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.price-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.price-card h3 {
+  color: #2196f3;
+  font-size: 1.2rem;
+  margin: 0;
 }
 
 .price {
-  font-weight: bold; /* Precio en negrita */
-  margin-bottom: 5px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
 }
+
+.price-ars {
+  font-size: 1.1rem;
+  color: #666;
+  font-weight: 500;
+}
+
 .description {
-  font-size: 14px;
-  color:#666;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.4;
 }
 
+.notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
-.cta {
+.tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+
+.cta-section {
   text-align: center;
-  margin-top: 20px;
+  padding-top: 30px;
+  border-top: 1px solid #eee;
 }
 
-.cta button {
-  background-color: #2196f3;
+.cta-button {
+  background: #2196f3;
   color: white;
-  padding: 12px 24px; /* Botón más grande */
   border: none;
-  border-radius: 5px;
+  padding: 15px 40px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  margin: 15px 0;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease; /* Transición suave */
+  transition: background 0.3s;
+  box-shadow: 0 2px 5px rgba(33, 150, 243, 0.3);
 }
 
-.cta button:hover {
-  background-color: #1976d2;
+.cta-button:hover {
+  background: #1976d2;
+  transform: translateY(-1px);
+}
+
+.consult-price {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .price-list {
+    padding: 15px;
+    margin: 10px;
+  }
+  
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .price-card {
+    padding: 20px;
+  }
+  
+  .cta-button {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .price-list h2 {
+    font-size: 1.5rem;
+  }
+  
+  .payment-info {
+    flex-direction: column;
+  }
+  
+  .tag {
+    font-size: 0.75rem;
+  }
 }
         
     </style>
@@ -108,63 +229,93 @@
         <div id="chat-input-container"><input type="text" id="chat-input" placeholder="Escribí acá..."><button id="send-button">Enviar</button></div>
     </div>
 
-    <div class="price-list">
-  <h3>Precios de Referencia</h3>
-  <p class="intro">Estos precios son aproximados y pueden variar según la complejidad de cada caso. Te recomendamos agendar una consulta de evaluación personalizada contactándonos en el chat online de arriba para obtener un presupuesto a tu medida.</p>
-
-  <div class="price-item">
-    <h3>Liposucción Ultrasónica (Vaser)</h3>
-    <p class="price">Desde $2500 USD (efectivo)</p>
-    <p>Hasta 3 pagos. Con $500 USD congelás el precio y reservás tu cirugía.</p>
-    <p class="description">Técnica mínimamente invasiva que utiliza ultrasonido para remover depósitos de grasa localizados, con una recuperación más rápida.</p>
+<div class="price-list">
+  <h2>Precios de Referencia</h2>
+  
+  <div class="payment-banner">
+    <div class="payment-info">
+      <span class="payment-icon">💳</span>
+      <div class="payment-text">
+        <h3>Todos los medios de pago</h3>
+        <p>Consultá por financiación y planes de pago</p>
+        <small class="exchange-note">*Precios en pesos calculados a dólar blue ($1225). Sujetos a variación.</small>
+      </div>
+    </div>
   </div>
 
-  <div class="price-item">
-    <h3>Lipoabdominoplastía</h3>
-    <p class="price">Desde $3000 USD (Incluye lipoescultura ultrasónica)</p>
-    <p class="description">Combina la liposucción con la abdominoplastía para eliminar el exceso de grasa y piel del abdomen, logrando un abdomen plano y firme.</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Liposucción Vaser</h3>
+      <div class="price">Desde USD 2500</div>
+      <div class="price-ars">≈ $3.062.500</div>
+      <div class="description">
+        Elimina grasa localizada mediante ultrasonido. Ideal para personas con peso estable y depósitos grasos resistentes.
+      </div>
+      <div class="notes">
+        <span class="tag">Seña USD 500</span>
+        <span class="tag">3 cuotas</span>
+      </div>
+    </div>
+
+    <div class="price-card">
+      <h3>Lipoabdominoplastía</h3>
+      <div class="price">Desde USD 3000</div>
+      <div class="price-ars">≈ $3.675.000</div>
+      <div class="description">
+        Combina liposucción y remoción de piel. Para pacientes con flacidez abdominal y exceso de grasa.
+      </div>
+      <div class="notes">
+        <span class="tag">Incluye lipoescultura</span>
+      </div>
+    </div>
+
+    <div class="price-card">
+      <h3>Renuvion</h3>
+      <div class="price">USD 1500</div>
+      <div class="price-ars">≈ $1.837.500</div>
+      <div class="description">
+        Tecnología de radiofrecuencia que tensa la piel. Complemento ideal para liposucción en casos de flacidez.
+      </div>
+      <div class="notes">
+        <span class="tag">Adicional a lipo</span>
+      </div>
+    </div>
+
+    <div class="price-card">
+      <h3>Aumento Mamario</h3>
+      <div class="price">USD 2500 + implantes</div>
+      <div class="price-ars">≈ $3.062.500 + implantes</div>
+      <div class="description">
+        Mejora el tamaño y forma del busto con implantes Motiva de última generación.
+      </div>
+      <div class="notes">
+        <span class="tag">Implantes USD 1200 (≈ $1.470.000)</span>
+      </div>
+    </div>
+
+    <div class="price-card">
+      <h3>Rinoplastía</h3>
+      <div class="price">Desde USD 2300</div>
+      <div class="price-ars">≈ $2.817.500</div>
+      <div class="description">
+        Mejora estética y funcional de la nariz. Personalizada según tu anatomía y objetivos.
+      </div>
+    </div>
+
+    <div class="price-card">
+      <h3>Recambio Prótesis</h3>
+      <div class="price">USD 3000 + implantes</div>
+      <div class="price-ars">≈ $3.675.000 + implantes</div>
+      <div class="description">
+        Actualización o reemplazo de implantes mamarios existentes por nuevos implantes Motiva.
+      </div>
+    </div>
   </div>
 
-  <div class="price-item">
-    <h3>Renuvion (adicional a lipoescultura)</h3>
-    <p class="price">$1500 USD</p>
-    <p class="description">Tecnología de radiofrecuencia que ayuda a tensar la piel y mejorar los resultados de la lipoescultura, ideal para flacidez leve a moderada. </p>
-  </div>
-
-  <div class="price-item">
-    <h3>Lipotransferencia Glútea (con otra cirugía)</h3>
-    <p class="price">$500 USD</p>
-    <p class="description">Transferencia de grasa propia a los glúteos para aumentar su volumen y mejorar su forma, realizándose en conjunto con otra cirugía.</p>
-  </div>
-
-  <div class="price-item">
-    <h3>Aumento Mamario</h3>
-    <p class="price">$2500 USD + $1200 USD (Implantes Motiva)</p>
-    <p class="description">Aumento del tamaño y la forma de los senos mediante la colocación de implantes mamarios de alta calidad.</p>
- </div>
-
-  <div class="price-item">
-    <h3>Mastopexia</h3>
-    <p class="price">$500 USD (adicional)</p>
-    <p class="description">Levantamiento de senos para corregir la flacidez y mejorar su posición, pudiéndose combinar con implantes.</p>
-  </div>
-
-  <div class="price-item">
-    <h3>Recambio de Prótesis</h3>
-    <p class="price">$3000 USD + implantes</p>
-    <p class="description">Reemplazo de implantes mamarios existentes por nuevos, ya sea por deseo de cambio de tamaño o por razones médicas.</p>
-  </div>
-
-  <div class="price-item">
-    <h3>Rinoplastía</h3>
-    <p class="price">Desde $2300 USD</p>
-    <p class="description">Cirugía que modifica la forma de la nariz para mejorar su estética y/o función respiratoria.</p>
-  </div>
-
- <div class="cta">
-    <p>Agendá tu consulta de evaluación personalizada por solo $10.000 (precio promocional) contactándonos en el chat online de arriba de todo.</p>
-     <p style="margin-bottom:15px;"></p>
-    <a href="#"><button>Agendar Consulta</button></a>
+  <div class="cta-section">
+    <p>¿Tenés dudas sobre algún procedimiento?</p>
+    <button class="cta-button">Agendar Evaluación</button>
+    <div class="consult-price">Consulta personalizada: $10.000</div>
   </div>
 </div>
     
