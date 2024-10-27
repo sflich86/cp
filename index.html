@@ -43,7 +43,9 @@
         <div id="chat-header"><h3><span class="online-icon"></span> CP Cirugía Estética</h2>
         <p style="margin-top: 5px;font-size: 15px;">📍 Mayor Arruabarrena 1792, Córdoba Capital.</p>
         </div>
-        <div id="chat-messages"></div>
+        <div id="chat-messages">
+  <div class="message bot">¡Hola! Soy Eleonora de CP Cirugia Estética. ¿En qué puedo ayudarte?</div>
+</div>
         <div id="chat-input-container"><input type="text" id="chat-input" placeholder="Escribí acá..."><button id="send-button">Enviar</button></div>
     </div>
     <script>
@@ -137,7 +139,7 @@ async function sendMessage() {
         if (!sessionId) {
             const data = await makeApiRequest('/chat/session', { api_key: API_KEY, assistant_id: ASSISTANT_ID });
             sessionId = data.session_id;
-            addMessage("¡Hola! Soy Eleonora de CP Cirugia Estética. ¿En qué puedo ayudarte?", false);
+         
         }
 
 
