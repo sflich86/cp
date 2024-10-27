@@ -225,6 +225,23 @@ html {
 }
         
     </style>
+    <!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '925160276145071');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=925160276145071&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
     <div id="chat-container">
@@ -329,6 +346,7 @@ html {
     
     <script>
     let sessionId = null;
+        let isFirstMessage = true; // Variable para rastrear si es el primer mensaje
         const API_KEY = '8e407fc7-e141-4a6e-8e84-ee4486737053'; //<- Your API Key
         const ASSISTANT_ID = '00a9a5c3-6bce-4e85-9d7a-a3d3995498c0'; //<- Your Assistant ID
 const API_BASE_URL = 'https://agentivehub.com/api';
@@ -409,6 +427,13 @@ async function sendMessage() {
 
     input.value = '';
     addMessage(message, true);
+
+     // Disparar evento de Lead si es el primer mensaje
+    if (isFirstMessage && typeof fbq !== 'undefined') {
+        fbq('track', 'Lead');
+        isFirstMessage = false; // Actualizar el estado para futuros mensajes
+     //   console.log('Facebook Lead event triggered');
+    }
 
     const typingIndicator = showTypingIndicator();
     const button = document.getElementById('send-button');
