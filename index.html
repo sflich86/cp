@@ -35,6 +35,62 @@
         .dot:nth-child(2) { animation-delay: 0.2s; }
         .dot:nth-child(3) { animation-delay: 0.3s; }
         @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); }}
+
+        .price-list {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-family: sans-serif; /* Fuente moderna */
+}
+
+.intro {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666; /* Color de texto más suave */
+}
+
+.price-item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.price-item h3 {
+  color: #2196f3;
+  margin-bottom: 5px;
+  font-size: 18px; /* Tamaño de título más grande */
+}
+
+.price {
+  font-weight: bold; /* Precio en negrita */
+  margin-bottom: 5px;
+}
+.description {
+  font-size: 14px;
+  color:#666;
+}
+
+
+.cta {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.cta button {
+  background-color: #2196f3;
+  color: white;
+  padding: 12px 24px; /* Botón más grande */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease; /* Transición suave */
+}
+
+.cta button:hover {
+  background-color: #1976d2;
+}
         
     </style>
 </head>
@@ -48,6 +104,66 @@
 </div>
         <div id="chat-input-container"><input type="text" id="chat-input" placeholder="Escribí acá..."><button id="send-button">Enviar</button></div>
     </div>
+
+    <div class="price-list">
+  <h2>Precios de Referencia</h2>
+  <p class="intro">Estos precios son aproximados y pueden variar según la complejidad de cada caso. Te recomendamos agendar una consulta de evaluación personalizada para obtener un presupuesto a tu medida.</p>
+
+  <div class="price-item">
+    <h3>Liposucción Ultrasónica (Vaser)</h3>
+    <p class="price">Desde $2500 USD (efectivo)</p>
+    <p>Hasta 3 pagos. Con $500 USD congelás el precio y reservás tu cirugía.</p>
+    <p class="description">Técnica mínimamente invasiva que utiliza ultrasonido para remover depósitos de grasa localizados, con una recuperación más rápida.</p>
+  </div>
+
+  <div class="price-item">
+    <h3>Lipoabdominoplastía</h3>
+    <p class="price">Desde $3000 USD (Incluye lipoescultura ultrasónica)</p>
+    <p class="description">Combina la liposucción con la abdominoplastía para eliminar el exceso de grasa y piel del abdomen, logrando un abdomen plano y firme.</p>
+  </div>
+
+  <div class="price-item">
+    <h3>Renuvion (adicional a lipoescultura)</h3>
+    <p class="price">$1500 USD</p>
+    <p class="description">Tecnología de radiofrecuencia que ayuda a tensar la piel y mejorar los resultados de la lipoescultura, ideal para flacidez leve a moderada. </p>
+  </div>
+
+  <div class="price-item">
+    <h3>Lipotransferencia Glútea (con otra cirugía)</h3>
+    <p class="price">$500 USD</p>
+    <p class="description">Transferencia de grasa propia a los glúteos para aumentar su volumen y mejorar su forma, realizándose en conjunto con otra cirugía.</p>
+  </div>
+
+  <div class="price-item">
+    <h3>Aumento Mamario</h3>
+    <p class="price">$2500 USD + $1200 USD (Implantes Motiva)</p>
+    <p class="description">Aumento del tamaño y la forma de los senos mediante la colocación de implantes mamarios de alta calidad.</p>
+ </div>
+
+  <div class="price-item">
+    <h3>Mastopexia</h3>
+    <p class="price">$500 USD (adicional)</p>
+    <p class="description">Levantamiento de senos para corregir la flacidez y mejorar su posición, pudiéndose combinar con implantes.</p>
+  </div>
+
+  <div class="price-item">
+    <h3>Recambio de Prótesis</h3>
+    <p class="price">$3000 USD + implantes</p>
+    <p class="description">Reemplazo de implantes mamarios existentes por nuevos, ya sea por deseo de cambio de tamaño o por razones médicas.</p>
+  </div>
+
+  <div class="price-item">
+    <h3>Rinoplastía</h3>
+    <p class="price">Desde $2300 USD</p>
+    <p class="description">Cirugía que modifica la forma de la nariz para mejorar su estética y/o función respiratoria.</p>
+  </div>
+
+ <div class="cta">
+    <p>Agendá tu consulta de evaluación personalizada por solo $10.000 (precio promocional) contactándonos en el chat online de arriba de todo.</p>
+    <button>Agendar Consulta</button>
+  </div>
+</div>
+    
     <script>
     let sessionId = null;
         const API_KEY = '8e407fc7-e141-4a6e-8e84-ee4486737053'; //<- Your API Key
