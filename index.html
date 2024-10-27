@@ -346,7 +346,9 @@ src="https://www.facebook.com/tr?id=925160276145071&ev=PageView&noscript=1"
     
     <script>
     let sessionId = null;
-        let isFirstMessage = true; // Variable para rastrear si es el primer mensaje
+       let userMessageCount = 0; // Contador de mensajes
+const MESSAGES_REQUIRED = 4; // Número de mensajes necesarios
+let eventTriggered = false; // Para asegurar que el evento se dispare una sola vez
         const API_KEY = '8e407fc7-e141-4a6e-8e84-ee4486737053'; //<- Your API Key
         const ASSISTANT_ID = '00a9a5c3-6bce-4e85-9d7a-a3d3995498c0'; //<- Your Assistant ID
 const API_BASE_URL = 'https://agentivehub.com/api';
@@ -428,12 +430,15 @@ async function sendMessage() {
     input.value = '';
     addMessage(message, true);
 
-     // Disparar evento de Lead si es el primer mensaje
-    if (isFirstMessage && typeof fbq !== 'undefined') {
-        fbq('track', 'Lead');
-        isFirstMessage = false; // Actualizar el estado para futuros mensajes
-     //   console.log('Facebook Lead event triggered');
-    }
+   // Incrementar el contador de mensajes del usuario
+userMessageCount++;
+
+// Disparar evento cuando se alcance el número requerido de mensajes
+if (userMessageCount === MESSAGES_REQUIRED && !eventTriggered && typeof fbq !== 'undefined') {
+    fbq('trackCustom', 'chatiniciado');
+    eventTriggered = true;
+ //   console.log(`Facebook chatiniciado event triggered after ${MESSAGES_REQUIRED} messages`);
+}
 
     const typingIndicator = showTypingIndicator();
     const button = document.getElementById('send-button');
