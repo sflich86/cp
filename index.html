@@ -36,6 +36,10 @@
         .dot:nth-child(3) { animation-delay: 0.3s; }
         @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); }}
 
+html {
+  scroll-behavior: smooth;
+}
+
 .price-list {
   width: 100%;
   max-width: 1200px;
@@ -159,6 +163,7 @@
 }
 
 .cta-button {
+  display: inline-block;
   background: #2196f3;
   color: white;
   border: none;
@@ -169,11 +174,14 @@
   cursor: pointer;
   transition: background 0.3s;
   box-shadow: 0 2px 5px rgba(33, 150, 243, 0.3);
+  text-decoration: none;
 }
 
 .cta-button:hover {
   background: #1976d2;
   transform: translateY(-1px);
+  text-decoration: none;
+  color: white;
 }
 
 .consult-price {
@@ -229,7 +237,7 @@
         <div id="chat-input-container"><input type="text" id="chat-input" placeholder="Escribí acá..."><button id="send-button">Enviar</button></div>
     </div>
 
-<div class="price-list">
+<div class="price-list" id="top">
   <h2>Precios de Referencia</h2>
   
   <div class="payment-banner">
@@ -314,7 +322,7 @@
 
   <div class="cta-section">
     <p>¿Tenés dudas sobre algún procedimiento?</p>
-   <a href="#" class="cta-button">Agendar Evaluación</a>
+    <a href="#top" class="cta-button">Agendar Evaluación</a>
     <div class="consult-price">Consulta personalizada: $10.000</div>
   </div>
 </div>
