@@ -65,24 +65,31 @@
                 sessionId = data.session_id; addMessage("¡Hola! Soy Eleonora de CP Cirugia Estética. ¿En qué puedo ayudarte?", false);
             } catch (error) { console.error('Session Init Error:', error); addMessage("Error al iniciar la sesión. Por favor, intenta de nuevo.", false);}
         }
-    function addMessage(text, isUser) {
+   function addMessage(text, isUser) {
     const messagesDiv = document.getElementById('chat-messages');
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
 
     if (!isUser) {
-        // Regular expression to find and replace **bold** text
-        const boldRegex = /\*\*(.*?)\*\*/g; // Matches text between ** ... **
+        // Regex para encontrar URLs
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+        // Reemplazar URLs con hipervínculos
         const formattedText = text.split('\n').map(part => {
             if (part.startsWith('-')) {
-                return `<li>${part.substring(2).trim().replace(boldRegex, '<strong>$1</strong>')}</li>`;
+                 return `<li>${part.substring(2).trim().replace(urlRegex, '<a href="$1" target="_blank">$1</a>')}</li>`;
             } else if (part.trim() !== "") {
-                return `<p>${part.trim().replace(boldRegex, '<strong>$1</strong>')}</p>`;
+                 return `<p>${part.trim().replace(urlRegex, '<a href="$1" target="_blank">$1</a>')}</p>`;
             } else {
-                return '';
+               return '';
             }
+
         }).join('');
+
         messageDiv.innerHTML = formattedText;
+
+
+
     } else {
         messageDiv.textContent = text;
     }
