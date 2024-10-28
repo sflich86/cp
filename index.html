@@ -340,6 +340,53 @@ html {
     border-radius: 50%;
 }    
 
+         .form-container h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .time-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .time-option {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        .time-option.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+
     </style>
     <!-- Meta Pixel Code -->
 <script>
@@ -360,6 +407,40 @@ src="https://www.facebook.com/tr?id=925160276145071&ev=PageView&noscript=1"
 <!-- End Meta Pixel Code -->
 </head>
 <body>
+    <div class="form-container">
+    <h2>Solicitar Cita</h2>
+    <form id="appointmentForm">
+        <div class="form-group">
+            <label for="name">Nombre Completo</label>
+            <input type="text" id="name" name="entry.1938220734" required>
+        </div>
+        <div class="form-group">
+            <label for="whatsapp">WhatsApp</label>
+            <input type="tel" id="whatsapp" name="entry.80607303" required>
+        </div>
+        <div class="form-group">
+            <label for="surgery">Cirugía de Interés</label>
+            <textarea id="surgery" name="entry.1745223063" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="date">Fecha Disponible</label>
+            <select id="date" required>
+                <option value="">Selecciona una fecha</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Horarios Disponibles</label>
+            <div class="time-options" id="time-options">
+                <!-- Opciones de horarios se generan dinámicamente -->
+            </div>
+            <input type="hidden" id="selected-time" required>
+        </div>
+        <input type="hidden" id="estado" name="entry.1433513583" value="NUEVO">
+        <input type="hidden" id="cita-concatenada" name="entry.604951112">
+        <input type="submit" value="Solicitar Cita" id="submitButton">
+    </form>
+</div>
+
     <div id="chat-container">
         <div id="chat-header"><span class="online-icon"></span>   <img src="https://i.ibb.co/tQcVQpG/cplogowsp3.jpg" alt="Logo CP Cirugía Estética" id="header-logo">
         <p style="margin-top: 5px;font-size: 15px;">📍 Mayor Arruabarrena 1792, Córdoba Capital.</p>
@@ -613,5 +694,104 @@ document.getElementById('send-button').addEventListener('click', sendMessage);
     }
 });
     </script>
+
+    <script>
+    const endpoint = "https://script.google.com/macros/s/AKfycbymZvbV-ugt9cB6iUsR_1ffb8Tc8Or1AN16JdYquEmCXqNgG9VymVwIPoOUc_xfPh9M/exec?fechasdisponibles=1";
+    const postEndpoint = "https://docs.google.com/forms/u/0/d/e/1FAIpQLScOrW-dqOoYq55JCkOPz5om0_jsgAl2rPcofpbF68nCM8EWYw/formResponse";
+
+    function capitalizeAndFixDate(string) {
+        return string.replace(/\b\w/g, char => char.toUpperCase()).replace(" De ", " de ");
+    }
+
+    async function loadAvailableDatesAndTimes() {
+        try {
+            const response = await fetch(endpoint);
+            const data = await response.json();
+
+            const dateSelect = document.getElementById("date");
+            Object.keys(data.horas_disponibles).forEach(fecha => {
+                const horarios = data.horas_disponibles[fecha];
+                if (horarios.length > 0) {
+                    const option = document.createElement("option");
+                    const formattedDate = capitalizeAndFixDate(fecha);
+                    option.value = formattedDate;
+                    option.textContent = formattedDate;
+                    dateSelect.appendChild(option);
+                }
+            });
+
+            dateSelect.addEventListener("change", () => {
+                const selectedDate = dateSelect.value;
+                const timeOptionsDiv = document.getElementById("time-options");
+                timeOptionsDiv.innerHTML = "";
+
+                Object.keys(data.horas_disponibles).forEach(fecha => {
+                    if (capitalizeAndFixDate(fecha) === selectedDate) {
+                        data.horas_disponibles[fecha].forEach(hora => {
+                            const timeOption = document.createElement("div");
+                            timeOption.className = "time-option";
+                            timeOption.textContent = hora;
+                            timeOption.onclick = () => selectTime(timeOption);
+                            timeOptionsDiv.appendChild(timeOption);
+                        });
+                    }
+                });
+            });
+        } catch (error) {
+            console.error("Error al cargar las fechas y horarios:", error);
+        }
+    }
+
+    function selectTime(element) {
+        const selected = document.querySelector(".time-option.selected");
+        if (selected) selected.classList.remove("selected");
+
+        element.classList.add("selected");
+        document.getElementById("selected-time").value = element.innerText;
+    }
+
+    document.getElementById("appointmentForm").onsubmit = async function(event) {
+        event.preventDefault();
+
+        const selectedDate = document.getElementById("date").value;
+        const selectedTime = document.getElementById("selected-time").value;
+
+        if (!selectedDate || !selectedTime) {
+            alert("Por favor, selecciona una fecha y un horario.");
+            return;
+        }
+
+        document.getElementById("cita-concatenada").value = `${selectedDate} ${selectedTime}`;
+        
+        const formData = new FormData(this);
+        const submitButton = document.getElementById("submitButton");
+
+        try {
+            const response = await fetch(postEndpoint, {
+                method: "POST",
+                body: formData,
+                mode: 'no-cors'
+            });
+
+            if (response.status === 200 || response.status === 0) {  // 0 because no-cors can prevent 200 from being detected.
+                fbq('trackCustom', 'chatiniciado');  // Dispara el evento de Facebook
+
+                submitButton.value = "Espere...";  // Cambia el texto del botón
+
+                setTimeout(() => {
+                    window.location.href = "https://mpago.la/1unstSp";
+                }, 2000);  // Espera 2 segundos antes de redirigir
+            } else {
+                alert("Error al solicitar cita");
+            }
+        } catch (error) {
+            console.error("Error en la solicitud:", error);
+            alert("Error al enviar los datos");
+        }
+    };
+
+    window.onload = loadAvailableDatesAndTimes;
+</script>
+
 </body>
 </html>
