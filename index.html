@@ -395,6 +395,11 @@ html {
             background-color: #4CAF50;
             color: white;
         }
+         .error-message {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+        }
 #appointmentForm {padding:20px;}
     </style>
     <!-- Meta Pixel Code -->
@@ -763,9 +768,28 @@ document.getElementById('send-button').addEventListener('click', sendMessage);
 
     document.getElementById("appointmentForm").onsubmit = async function(event) {
         event.preventDefault();
-
+        const name = document.getElementById("name").value;
+        const whatsapp = document.getElementById("whatsapp").value;
         const selectedDate = document.getElementById("date").value;
         const selectedTime = document.getElementById("selected-time").value;
+
+        // Validación de nombre
+        const nameError = document.getElementById("nameError");
+        if (!validateName(name)) {
+            nameError.style.display = "block";
+            return;
+        } else {
+            nameError.style.display = "none";
+        }
+
+        // Validación de WhatsApp
+        const whatsappError = document.getElementById("whatsappError");
+        if (!validateWhatsApp(whatsapp)) {
+            whatsappError.style.display = "block";
+            return;
+        } else {
+            whatsappError.style.display = "none";
+        }
 
         if (!selectedDate || !selectedTime) {
             alert("Por favor, selecciona una fecha y un horario.");
