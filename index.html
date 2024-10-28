@@ -768,6 +768,17 @@ document.getElementById('send-button').addEventListener('click', sendMessage);
         document.getElementById("selected-time").value = element.innerText;
     }
 
+        function validateName(name) {
+        // Validar que contenga al menos un nombre y un apellido
+        return name.trim().split(" ").length >= 2;
+    }
+
+    function validateWhatsApp(whatsapp) {
+        // Validar que tenga exactamente 12 dígitos, sin espacios ni guiones
+        const regex = /^\d{12}$/; 
+        return regex.test(whatsapp);
+    }
+        
     document.getElementById("appointmentForm").onsubmit = async function(event) {
         event.preventDefault();
         const name = document.getElementById("name").value;
